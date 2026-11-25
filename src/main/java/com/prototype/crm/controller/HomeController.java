@@ -9,4 +9,7 @@ public class HomeController {
     @GetMapping("/home-crm")
     public String viewHome() { return "home"; }
 
+    @GetMapping("/app.html")
+    public String viewApp() { return "app"; }
+
 }

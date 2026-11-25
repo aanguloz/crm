@@ -27,7 +27,9 @@ public class ActivityServiceImp implements ActivityService {
         activity.setSubject(activityReqDTO.getSubject());
         activity.setType(activityReqDTO.getType());
         activity.setPriority(activityReqDTO.getPriority());
-        activity.setScheduledDate(activityReqDTO.getScheduledDate());
+        activity.setScheduledDate(activityReqDTO.getScheduledDate() != null
+                ? activityReqDTO.getScheduledDate()
+                : LocalDateTime.now());
         // activity.setOwner(userRepository.findById(dto.getOwner().getId()).orElseThrow()); // Descomentar si necesitas validar el usuario
 
         Activity saved = activityRepository.save(activity);
@@ -40,6 +42,19 @@ public class ActivityServiceImp implements ActivityService {
 
         Activity activity = activityRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Actividad no encontrada con ID: " + id));
+
+        if (activityReqDTO.getSubject() != null) {
+            activity.setSubject(activityReqDTO.getSubject());
+        }
+        if (activityReqDTO.getType() != null) {
+            activity.setType(activityReqDTO.getType());
+        }
+        if (activityReqDTO.getPriority() != null) {
+            activity.setPriority(activityReqDTO.getPriority());
+        }
+        if (activityReqDTO.getScheduledDate() != null) {
+            activity.setScheduledDate(activityReqDTO.getScheduledDate());
+        }
 
         activity.setSubject(activityReqDTO.getSubject());
         activity.setType(activityReqDTO.getType());
@@ -60,7 +75,7 @@ public class ActivityServiceImp implements ActivityService {
             activities = activityRepository.findByScheduledDateBetween(start, end);
         } else {
             // Trae actividades futuras o pendientes ordenadas por fecha
-            activities = activityRepository.findByScheduledDateAfterOrderByScheduledDateAsc(LocalDateTime.now());
+            activities = activityRepository.findAllByOrderByScheduledDateAsc();
         }
         return activities.stream().map(this::mapToRespDTO).collect(Collectors.toList());
 

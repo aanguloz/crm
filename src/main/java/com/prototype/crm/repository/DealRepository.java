@@ -2,7 +2,6 @@ package com.prototype.crm.repository;
 
 import com.prototype.crm.model.dto.emuns.DealStage;
 import com.prototype.crm.model.entity.Deal;
-import com.prototype.crm.model.records.PipelineStageDTO;
 import io.lettuce.core.dynamic.annotation.Param;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -15,11 +14,18 @@ import java.util.UUID;
 public interface DealRepository extends JpaRepository<Deal, UUID> {
 
     @Query("""
-        SELECT d.stage, COUNT(d), SUM(d.amount)
-            FROM Deal d
-            GROUP BY d.stage
-            ORDER BY d.stage""")
-    List<PipelineStageDTO> getPipelineFunnelData();
+        SELECT d.stage, COUNT(d), COALESCE(SUM(d.amount), 0)
+        FROM Deal d
+        GROUP BY d.stage
+        ORDER BY CASE d.stage
+            WHEN 'PROSPECTION'  THEN 1
+            WHEN 'QUALIFICATION' THEN 2
+            WHEN 'PROPOSAL'      THEN 3
+            WHEN 'NEGOTIATION'   THEN 4
+            WHEN 'CLOSED_WON'    THEN 5
+        END
+    """)
+    List<Object[]> getRawPipelineFunnelData();
 
     long countByStage(DealStage stage);
 

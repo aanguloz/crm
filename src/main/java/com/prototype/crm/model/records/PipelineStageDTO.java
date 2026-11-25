@@ -1,10 +1,12 @@
 package com.prototype.crm.model.records;
 
+import com.prototype.crm.model.dto.emuns.DealStage;
+
 import java.math.BigDecimal;
 
 public record PipelineStageDTO(
-        String stage,
+        DealStage stage,
         long count,
-        BigDecimal totalValue
+        BigDecimal totalAmount
 ) {
 }

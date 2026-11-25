@@ -29,7 +29,7 @@ public class Users {
     @Column(nullable = false)
     private String password;
 
-    private Boolean isActive;
+    private Boolean isActive = true;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(

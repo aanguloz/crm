@@ -58,13 +58,19 @@ public class SecurityConfig {
                 // Reglas de autorización
                 .authorizeHttpRequests(auth -> auth
                         // Endpoints públicos (archivos estáticos y registro/login)
-                        .requestMatchers("/home-crm", "/css/**", "/js/**", "/images/**", "/favicon.ico").permitAll()
+                        .requestMatchers("/", "/home.html", "/app.html", "/home-crm", "/css/**", "/js/**", "/favicon.ico", "/error").permitAll()
                         .requestMatchers("/api/v1/users/login", "/api/v1/users/").permitAll()
 
                         // Todo lo demás requiere autenticación JWT válida
                         .anyRequest().authenticated()
                 )
-
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/home-crm")  // ✅ Redirección después del logout
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID")
+                        .clearAuthentication(true)
+                )
                 // Insertar tu filtro JWT antes del filtro de autenticación por defecto de Spring
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 

@@ -11,7 +11,7 @@ public interface ActivityRepository extends JpaRepository<Activity, UUID> {
 
     List<Activity> findByScheduledDateBetween(LocalDateTime start, LocalDateTime end);
 
-    List<Activity> findByScheduledDateAfterOrderByScheduledDateAsc(LocalDateTime now);
+    List<Activity> findAllByOrderByScheduledDateAsc();
 
     List<Activity> findTopByOrderByScheduledDateDesc(int limit);
 

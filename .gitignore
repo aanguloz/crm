@@ -57,7 +57,6 @@ logs/
 
 # Variables de entorno y secretos
 .env
-application-local.yml
 application-local.properties
 
 # Docker (opcional, según lo que quieras compartir)

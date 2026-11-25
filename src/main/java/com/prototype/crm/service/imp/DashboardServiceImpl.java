@@ -56,7 +56,13 @@ public class DashboardServiceImpl implements DashboardService {
 
     @Override
     public List<PipelineStageDTO> getPipelineFunnelData() {
-        return dealRepository.getPipelineFunnelData();
+        return dealRepository.getRawPipelineFunnelData().stream()
+                .map(row -> new PipelineStageDTO(
+                        (DealStage) row[0],
+                        ((Number) row[1]).longValue(),
+                        row[2] instanceof BigDecimal bd ? bd : BigDecimal.valueOf(((Number) row[2]).doubleValue())
+                ))
+                .collect(Collectors.toList());
     }
 
     @Override
